@@ -14,37 +14,24 @@ export default function Footer() {
               AMEEN <span style={{ color: 'var(--accent)' }}>·</span> CONSULTANCY
             </Link>
             <p>
-              Tanzania&apos;s leading executive advisory house—specialising in high-stakes
-              strategy, financial engineering, and institutional legal security for
-              global enterprises.
+              Executive advisory from Tanzania for strategy, finance, and institutional legal risk.
             </p>
           </div>
 
-          <div className="footer-col">
-            <h5>Solutions</h5>
-            <a href={`${p}#services`}>Finance Solutions</a>
-            <a href={`${p}#services`}>Tax Compliance</a>
-            <a href={`${p}#services`}>Legal Advisory</a>
-            <a href={`${p}#services`}>Business Solutions</a>
-          </div>
-
-          <div className="footer-col">
-            <h5>Company</h5>
+          <nav className="footer-pairs" aria-label="Footer">
+            <Link to="/">Company</Link>
             <a href={`${p}#about`}>About</a>
             <a href={`${p}#team`}>Partners</a>
             <a href={`${p}#industries`}>Sectors</a>
             <a href={`${p}#analytics`}>Analytics</a>
             <a href={`${p}#events`}>Events</a>
             <Link to="/careers">Careers</Link>
-          </div>
-
-          <div className="footer-col">
-            <h5>Connect</h5>
+            <a href={`${p}#contact`}>Connect</a>
             <a href="#">LinkedIn</a>
             <a href="#">Newsletter</a>
             <a href="mailto:solutions@ameen.com">Email Us</a>
             <a href={`${p}#contact`}>Contact</a>
-          </div>
+          </nav>
         </div>
 
         <hr className="footer-divider" />

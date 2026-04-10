@@ -3,17 +3,57 @@ import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { insightPublications } from './data/insightPublications';
 import {
   BarChart4, Gavel, FileBadge, Cpu,
-  Linkedin, Mail, Globe, MapPin,
+  Phone, Mail, Globe, MapPin,
   ArrowRight, ArrowUpRight, ChevronRight,
-  Award, Users, TrendingUp, Shield, X
+  Users, Shield, X
 } from 'lucide-react';
 
 /** Alternating section titles: About=left, Services=center, Industries=left, Team=center, … */
 function sectionHeadingAlign(i) {
   return i % 2 === 0 ? 'left' : 'center';
 }
+
+/** Initials from partner display name (no stock photos). */
+function partnerInitials(fullName) {
+  const main = fullName.split(',')[0].trim();
+  const words = main.split(/\s+/).filter(Boolean);
+  if (words.length >= 2) {
+    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+  }
+  return main.slice(0, 2).toUpperCase();
+}
+
+/** Sector / event cards: navy–accent gradients only (no external imagery). */
+const sectorPortalGradients = [
+  'linear-gradient(155deg, #0f2847 0%, #1a4a6e 42%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #0c2438 0%, #14532d 45%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #1a1f2e 0%, #3d2c1e 48%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #0f2847 0%, #1e3a5f 50%, #152a45 100%)',
+  'linear-gradient(155deg, #0d1f3c 0%, #1e3a8a 45%, #0f2847 100%)',
+  'linear-gradient(155deg, #0f2847 0%, #0e4a5c 48%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #1e1b2e 0%, #4a3728 45%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #0d2838 0%, #164e63 50%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #0f172a 0%, #312e81 48%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #14532d 0%, #0f2847 50%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #1e293b 0%, #4c1d95 42%, #0d1f3c 100%)',
+  'linear-gradient(155deg, #292524 0%, #431407 45%, #0d1f3c 100%)',
+];
+
+const eventPortalGradients = [
+  'linear-gradient(160deg, #0d1f3c 0%, #1e3a5f 40%, #0f2847 100%)',
+  'linear-gradient(160deg, #0f2847 0%, #134e4a 45%, #0d1f3c 100%)',
+  'linear-gradient(160deg, #1e1b4b 0%, #312e81 48%, #0d1f3c 100%)',
+  'linear-gradient(160deg, #0c4a6e 0%, #0d1f3c 50%, #0f2847 100%)',
+  'linear-gradient(160deg, #422006 0%, #0d1f3c 45%, #1e3a5f 100%)',
+  'linear-gradient(160deg, #134e4a 0%, #0f2847 48%, #0d1f3c 100%)',
+  'linear-gradient(160deg, #312e81 0%, #0d1f3c 50%, #1e3a8a 100%)',
+  'linear-gradient(160deg, #14532d 0%, #0d1f3c 42%, #164e63 100%)',
+  'linear-gradient(160deg, #4c1d95 0%, #0d1f3c 48%, #1e3a5f 100%)',
+  'linear-gradient(160deg, #0f2847 0%, #854d0e 40%, #0d1f3c 100%)',
+];
 
 /* ─── Animation Variants ─────────────────────────────────────── */
 const fadeUp = {
@@ -35,9 +75,7 @@ const fadeRight = {
 };
 
 /* ─── Hero ───────────────────────────────────────────────────── */
-const heroImages = [
-  "/hero-bg.jpg"
-];
+const heroImages = ['/hero-bg.jpg'];
 
 const Hero = () => {
   return (
@@ -70,8 +108,11 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
           >
-            Strategic Intelligence.<br />
-            <em>Modern Solutions.</em>
+            Transforming uncertainty
+            <br />
+            into confidence
+            <br />
+            <em>through integrity and innovation.</em>
           </motion.h1>
 
           <motion.p
@@ -80,8 +121,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.9 }}
           >
-            Ameen Consultancy provides prestigious advisory services across Finance,
-            Law, and Operations for the next generation of global industry leaders.
+            We deliver trusted guidance that helps businesses navigate complexity and grow with confidence.
           </motion.p>
 
           <motion.div
@@ -91,10 +131,10 @@ const Hero = () => {
             transition={{ delay: 0.9, duration: 0.8 }}
           >
             <a href="#services" className="btn btn-gold">
-              Explore Services <ArrowRight size={15} />
+              Services <ArrowRight size={15} />
             </a>
             <a href="#contact" className="btn btn-outline-white">
-              Get in Touch
+              Contact
             </a>
           </motion.div>
         </div>
@@ -111,10 +151,9 @@ const Hero = () => {
 
 /* ─── About ──────────────────────────────────────────────────── */
 const stats = [
-  { Icon: Award,      value: '22+',  label: 'Practice Years' },
-  { Icon: Users,      value: '15',   label: 'Sectors Served' },
-  { Icon: TrendingUp, value: '$3.5B+',label: 'Portfolio Advised' },
-  { Icon: Shield,     value: 'Global', label: 'Network Reach' },
+  { value: '8+', label: 'Years in practice' },
+  { value: '13', label: 'Sectors served' },
+  { value: '98%', label: 'Satisfaction rate' },
 ];
 
 const About = () => (
@@ -132,21 +171,13 @@ const About = () => (
         <div className="about-text-block">
         <motion.div variants={fadeLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <div className={`section-heading-block section-heading-block--${sectionHeadingAlign(0)}`}>
-            <div className="eyebrow">Global Standards</div>
-            <h2 className="section-heading-block__title">Architecting Institutional Resilience</h2>
+            <div className="eyebrow">About Us</div>
+            <h2 className="section-heading-block__title">About Us</h2>
           </div>
         </motion.div>
         <motion.div className="about-para" variants={fadeRight} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <p>
-            Ameen Consultancy is a premier management firm deeply rooted in providing unique assurance 
-            and advisory services to institutional clients across 15 critical sectors. Our strategic roadmap 
-            merges financial foresight with legal precision, leveraging a multi-disciplined pool 
-            of experts—including CPAs, CIAs, and CISAs—to safeguard your interests while optimising for global scale.
-          </p>
-          <p>
-            With an in-depth understanding of multinational development projects and a global network 
-            of affiliates, we provide the rigorous due diligence and operational intelligence 
-            required for high-stakes growth in the East African region and beyond.
+            At Ameen Consultancy, we help businesses navigate complexity with confidence. Our expertise spans finance, tax, legal, and business solutions, ensuring strict compliance with regulatory standards. We provide trusted advisory and assurance services that deliver clarity, strengthen resilience, and support sustainable growth. Through strategic insight and reliable guidance, we empower businesses to thrive in an evolving global environment.
           </p>
         </motion.div>
 
@@ -160,11 +191,7 @@ const About = () => (
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <img 
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80&w=1200&h=800"
-            alt="Corporate advisory session"
-            className="about-image"
-          />
+          <div className="about-image about-image--brand" role="img" aria-label="Brand accent" />
         </motion.div>
 
         {/* Stats: left column under copy on desktop; after image on mobile */}
@@ -301,10 +328,10 @@ const Services = ({ openModal }) => (
   <section id="services" className="section bg-soft">
     <div className="container">
       <div className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(1)}`}>
-        <div className="eyebrow">Strategic Specializations</div>
-        <h2>Four Pillars of Excellence</h2>
+        <div className="eyebrow eyebrow--title-case">Our Professional Services</div>
+        <h2>What We Offer</h2>
         <p style={{ fontSize: '1.05rem' }}>
-          Precision-driven solutions crafted for institutions that demand nothing less than the best.
+          Integrated advisory for institutions that need depth across finance, tax, legal, and operations.
         </p>
       </div>
 
@@ -351,26 +378,22 @@ const members = [
   { 
     name: 'Suleiman Ameen, CPA, CFE', 
     role: 'Managing Partner', 
-    bio: 'A distinguished expert in statutory audit and financial investigation. As a Certified Public Accountant and Certified Fraud Examiner, he has spearheaded complex restructuring and high-stakes financial intelligence for multinational entities across East Africa and the Middle East.', 
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256&h=256' 
+    bio: 'A distinguished expert in statutory audit and financial investigation. As a Certified Public Accountant and Certified Fraud Examiner, he has spearheaded complex restructuring and high-stakes financial intelligence for multinational entities across East Africa and the Middle East.',
   },
   { 
     name: 'Dr. Sarah Thorne, CIA, CISA', 
     role: 'Senior Partner · Risk & Assurance', 
-    bio: 'Specializing in sovereign risk and institutional resilience. With two decades of experience in the Big Four, she advises NGOs and global development agencies on internal audit frameworks and systemic project impact assessments.', 
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=256&h=256' 
+    bio: 'Specializing in sovereign risk and institutional resilience. With two decades of experience in the Big Four, she advises NGOs and global development agencies on internal audit frameworks and systemic project impact assessments.',
   },
   { 
     name: 'Arthur Vance, CISA, PMP', 
     role: 'Partner · Systems & Digital Strategy', 
-    bio: 'Architecting digital resilience for modern enterprises. A leading Information Systems Auditor with a deep focus on ERP integrity, cybersecurity governance, and technical due diligence for cross-border M&A operations.', 
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=256&h=256' 
+    bio: 'Architecting digital resilience for modern enterprises. A leading Information Systems Auditor with a deep focus on ERP integrity, cybersecurity governance, and technical due diligence for cross-border M&A operations.',
   },
   { 
     name: 'Linda Kemp, CGAP, MEL', 
     role: 'Partner · Public Sector & Development', 
-    bio: 'An authority on public sector capital allocation and social impact monitoring. Her global footprint includes strategic advisory for the World Bank and UN-affiliated NGOs on large-scale developmental infrastructure projects.', 
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=256&h=256' 
+    bio: 'An authority on public sector capital allocation and social impact monitoring. Her global footprint includes strategic advisory for the World Bank and UN-affiliated NGOs on large-scale developmental infrastructure projects.',
   },
 ];
 
@@ -385,18 +408,17 @@ const Team = () => (
         viewport={{ once: true }}
       >
         <div className="eyebrow" style={{ color: 'var(--accent)' }}>
-          Expert Human Capital
+          Our team
         </div>
-        <h2>A Pool of Multi-Disciplined Resources</h2>
+        <h2>Meet our Partners</h2>
         <p>
-          Our partners are world-class professionals deeply rooted in unique 
-          assurance and advisory services for global enterprises.
+          Partners and senior specialists across audit, risk, systems, and public-sector programmes.
         </p>
       </motion.div>
 
       <div className="team-scroll" role="region" aria-label="Partners and team">
         <div className="team-grid">
-        {members.map(({ name, role, bio, image }, i) => (
+        {members.map(({ name, role, bio }, i) => (
           <motion.div
             key={i}
             className="team-card"
@@ -407,7 +429,9 @@ const Team = () => (
             viewport={{ once: true, margin: '-40px' }}
           >
             <div className="team-avatar">
-              <img src={image} alt={name} />
+              <span className="team-initials" style={{ background: teamColors[i % teamColors.length] }}>
+                {partnerInitials(name)}
+              </span>
               <div className="avatar-ring" />
             </div>
             
@@ -419,7 +443,7 @@ const Team = () => (
               
               <div className="team-footer">
                 <div className="team-social">
-                  <a href="#" aria-label="LinkedIn"><Linkedin size={14} /></a>
+                  <a href="#" aria-label="Phone"><Phone size={14} /></a>
                   <a href="#" aria-label="Email"><Mail size={14} /></a>
                 </div>
               </div>
@@ -462,7 +486,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Globe
   },
   { 
@@ -494,7 +517,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Cpu
   },
   { 
@@ -525,7 +547,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1541888086925-0c13ee0bc14f?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: BarChart4
   },
   { 
@@ -556,7 +577,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Globe
   },
   { 
@@ -586,7 +606,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: BarChart4
   },
   { 
@@ -618,7 +637,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Globe
   },
   { 
@@ -649,7 +667,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: BarChart4
   },
   { 
@@ -677,7 +694,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Shield
   },
   { 
@@ -708,7 +724,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Cpu
   },
   { 
@@ -739,7 +754,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Users
   },
   { 
@@ -770,7 +784,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1550572017-4fcdbb59cc32?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: Shield
   },
   { 
@@ -801,7 +814,6 @@ const sectors = [
         </div>
       </div>
     `,
-    image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80&w=600&h=400',
     Icon: BarChart4
   }
 ];
@@ -820,14 +832,12 @@ const Industries = ({ openModal }) => (
         <div className="eyebrow">Global Reach</div>
         <h2 className="section-heading-block__title">Strategic Sector Intelligence</h2>
         <p className="section-heading-block__lead">
-          Deeply rooted in providing solutions for large multinational development agencies 
-          and global enterprises. We carry out audits, due diligence, and risk assessments 
-          across 12 critical industries.
+          Multisector coverage—audit, diligence, and risk for large projects and global enterprises.
         </p>
       </div>
 
       <div className="industries-list">
-        {sectors.map(({ num, title, overview, policy, image, details, Icon }, i) => (
+        {sectors.map(({ num, title, overview, policy, details, Icon }, i) => (
           <motion.div
             key={i}
             className="industry-portal"
@@ -843,14 +853,18 @@ const Industries = ({ openModal }) => (
                 subtitle: `Sector ${num}`,
                 content: policy,
                 details,
-                image,
                 Icon,
                 type: 'Industry',
               })
             }
           >
             <div className="portal-overlay"></div>
-            <img src={image} alt={title} className="portal-image" />
+            <div
+              className="portal-image"
+              style={{ background: sectorPortalGradients[i % sectorPortalGradients.length] }}
+              role="img"
+              aria-hidden="true"
+            />
             <div className="portal-content">
               <div className="portal-num">{num}</div>
               <h3 className="portal-title">{title}</h3>
@@ -863,127 +877,22 @@ const Industries = ({ openModal }) => (
   </motion.section>
 );
 
-/* ─── Analytics & Reports ───────────────────────────────────── */
-const analyticsReports = [
-  {
-    num: '01',
-    type: 'Report',
-    tag: 'Financial outlook',
-    title: 'Tanzania CFO Pulse & Banking Sentiment 2025',
-    desc: 'Credit conditions, FX liquidity, and working-capital themes shaping listed and large private groups in Dar es Salaam and up-country hubs.',
-    date: 'March 2025',
-    gradient: 'linear-gradient(135deg, rgba(26,58,107,0.2) 0%, rgba(37,99,235,0.12) 100%)',
-    shape: '#1e4799',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Executive summary</h4>
-        <p>Annual-style snapshot of balance-sheet discipline, funding costs, and sectoral stress points relevant to boards and lenders operating in Tanzania.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">What we cover</h4>
-        <ul class="modal-bullet-list">
-          <li>Liquidity and interest-rate pass-through across corporate banking</li>
-          <li>FX and working-capital behaviour for import-led sectors</li>
-          <li>IFRS disclosure themes and audit committee focus areas</li>
-          <li>Capital allocation and dividend policy among large enterprises</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '02',
-    type: 'Report',
-    tag: 'Tax & TRA',
-    title: 'TRA Compliance & EAC Tax Developments',
-    desc: 'Practical read on VAT, withholding, digital filing, and cross-border rules affecting Tanzanian operations and regional supply chains.',
-    date: 'February 2025',
-    gradient: 'linear-gradient(135deg, rgba(234,108,10,0.14) 0%, rgba(26,58,107,0.1) 100%)',
-    shape: '#ea6c0a',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Executive summary</h4>
-        <p>Big Four–style tax bulletin focused on what TRA and EAC practice means for CFOs and heads of tax this year.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Highlights</h4>
-        <ul class="modal-bullet-list">
-          <li>Corporate income tax and transfer-pricing scrutiny trends</li>
-          <li>VAT on services, e-invoicing, and audit settlement patterns</li>
-          <li>Withholding on payments to non-residents and treaty angles</li>
-          <li>Customs and excise watchpoints for importers and manufacturers</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '03',
-    type: 'Report',
-    tag: 'Investment',
-    title: 'Deal Flow & Capital Markets Watch — Tanzania',
-    desc: 'M&A, PE, and project-finance appetite; valuation multiples; and infrastructure-linked investment themes across key sectors.',
-    date: 'January 2025',
-    gradient: 'linear-gradient(135deg, rgba(6,95,70,0.14) 0%, rgba(16,185,129,0.1) 100%)',
-    shape: '#059669',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Executive summary</h4>
-        <p>Investment and performance analytics oriented to institutions tracking Tanzania exposure alongside regional peers.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Analytics pack</h4>
-        <ul class="modal-bullet-list">
-          <li>Sector heatmap: telecoms, energy, agriculture, financial services</li>
-          <li>Greenfield vs brownfield and PPP-style project pipelines</li>
-          <li>FX and repatriation considerations for offshore investors</li>
-          <li>ESG and development-finance co-investment criteria</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '04',
-    type: 'Report',
-    tag: 'Legal & regulatory',
-    title: 'Corporate & Commercial Law Radar',
-    desc: 'Company law, licensing, employment, and dispute trends affecting multinationals and large local groups in Tanzania.',
-    date: 'December 2024',
-    gradient: 'linear-gradient(135deg, rgba(124,58,237,0.14) 0%, rgba(167,139,250,0.08) 100%)',
-    shape: '#7c3aed',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Executive summary</h4>
-        <p>General counsel briefing on statutory and regulatory shifts with operational impact—aligned with how major advisory firms publish annual legal outlooks.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Topics</h4>
-        <ul class="modal-bullet-list">
-          <li>BRELA, sector regulators, and beneficial-ownership compliance</li>
-          <li>Commercial contracts, arbitration, and court backlog themes</li>
-          <li>Employment, expatriate quotas, and local content rules</li>
-          <li>Data protection, cybersecurity, and digital services licensing</li>
-        </ul>
-      </div>
-    `,
-  },
-];
-
 const AnalyticsReports = ({ openModal }) => (
   <section id="analytics" className="section bg-soft">
     <div className="container">
       <div className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(4)}`}>
-        <div className="eyebrow">Publications</div>
+        <div className="eyebrow">Analytics</div>
         <h2>Analytics & Reports</h2>
-        <p style={{ fontSize: '1.05rem' }}>
-          Tanzania-focused outlooks on finance, tax, investment, and legal themes—published in the spirit
-          of major advisory firm yearbooks.
+        <p style={{ fontSize: '1.05rem', maxWidth: '42rem' }}>
+          Tanzania analytics and reference notes drawn from public regulatory and official sources.
         </p>
       </div>
 
-      <div className="insights-scroll" role="region" aria-label="Analytics and reports">
+      <div className="insights-scroll" role="region" aria-label="Tanzania analytics reports">
         <div className="insights-track">
-          {analyticsReports.map((item, i) => (
+          {insightPublications.map((item, i) => (
             <motion.div
-              key={i}
+              key={`${item.num}-${item.title}`}
               className="insight-card"
               custom={i}
               variants={fadeUp}
@@ -997,10 +906,12 @@ const AnalyticsReports = ({ openModal }) => (
               tabIndex={0}
             >
               <div className="insight-img">
-                <div className="insight-img-gradient" style={{ background: item.gradient }} />
+                <div className="insight-img-gradient" style={{ background: item.gradient }} aria-hidden="true" />
                 <svg
-                  width="120" height="120" viewBox="0 0 120 120"
-                  style={{ opacity: 0.15 }}
+                  width="120"
+                  height="120"
+                  viewBox="0 0 120 120"
+                  className="insight-img-graphic"
                   aria-hidden="true"
                 >
                   <circle cx="60" cy="60" r="50" fill="none" stroke={item.shape} strokeWidth="1.5" />
@@ -1014,7 +925,7 @@ const AnalyticsReports = ({ openModal }) => (
                 <h3>{item.title}</h3>
                 <p>{item.desc}</p>
                 <div className="insight-meta">{item.date}</div>
-                <span className="insight-read-more">View analysis <ArrowUpRight size={14} /></span>
+                <span className="insight-read-more">Read more <ArrowUpRight size={14} /></span>
               </div>
             </motion.div>
           ))}
@@ -1032,7 +943,6 @@ const firmEvents = [
     venue: 'Dar es Salaam',
     role: 'Hosted',
     dateLine: '18 Mar 2025',
-    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800&h=1000',
     details: `
       <div class="modal-sub-section">
         <h4 class="modal-sub-title">Overview</h4>
@@ -1055,7 +965,6 @@ const firmEvents = [
     venue: 'Dar es Salaam',
     role: 'Attended',
     dateLine: '06 Feb 2025',
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=800&h=1000',
     details: `
       <div class="modal-sub-section">
         <h4 class="modal-sub-title">Participation</h4>
@@ -1078,7 +987,6 @@ const firmEvents = [
     venue: 'Nairobi',
     role: 'Attended',
     dateLine: '22 Nov 2024',
-    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=800&h=1000',
     details: `
       <div class="modal-sub-section">
         <h4 class="modal-sub-title">Why we were there</h4>
@@ -1101,7 +1009,6 @@ const firmEvents = [
     venue: 'Hybrid · Dar es Salaam',
     role: 'Hosted',
     dateLine: '09 Oct 2024',
-    image: 'https://images.unsplash.com/photo-1560439514-4e9645039924?auto=format&fit=crop&q=80&w=800&h=1000',
     details: `
       <div class="modal-sub-section">
         <h4 class="modal-sub-title">Audience</h4>
@@ -1113,6 +1020,138 @@ const firmEvents = [
           <li>BRELA filings and beneficial-ownership registers</li>
           <li>Audit committee cadence and external auditor oversight</li>
           <li>Related-party and governance disclosures</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '05',
+    title: 'EAC CFO & Treasury Exchange',
+    desc: 'Regional peer exchange on liquidity, hedging, and cross-border tax administration.',
+    venue: 'Arusha',
+    role: 'Attended',
+    dateLine: '14 Aug 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Focus</h4>
+        <p>East African finance leaders comparing treasury practice, TRA interfaces, and donor-reporting alignment.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Topics</h4>
+        <ul class="modal-bullet-list">
+          <li>Multi-entity cash pooling</li>
+          <li>VAT and customs in the customs union</li>
+          <li>DFI covenant reporting</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '06',
+    title: 'HR & Payroll Compliance Clinic',
+    desc: 'Half-day working session on PAYE, SDL, and statutory filings for scaling employers.',
+    venue: 'Dar es Salaam',
+    role: 'Hosted',
+    dateLine: '27 Jun 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Audience</h4>
+        <p>HR directors and payroll leads from manufacturing, retail, and NGO sectors.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Covered</h4>
+        <ul class="modal-bullet-list">
+          <li>PAYE bands and benefit-in-kind</li>
+          <li>NSSF / PSSSF updates</li>
+          <li>Skills development levy mechanics</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '07',
+    title: 'Mining & Extractives Disclosure Forum',
+    desc: 'Panel on EITI-style reporting, local content, and assurance expectations for listed operators.',
+    venue: 'Dar es Salaam',
+    role: 'Attended',
+    dateLine: '30 Apr 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Context</h4>
+        <p>Dialogue with operators, regulators, and investors on transparency and audit-ready project economics.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Themes</h4>
+        <ul class="modal-bullet-list">
+          <li>Production-sharing and fiscal terms</li>
+          <li>Community development agreements</li>
+          <li>Independent assurance on reserves</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '08',
+    title: 'Digital Services & Data Protection Breakfast',
+    desc: 'Briefing on TCRA expectations, cross-border data flows, and vendor due diligence.',
+    venue: 'Dar es Salaam',
+    role: 'Hosted',
+    dateLine: '12 Mar 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Why it mattered</h4>
+        <p>Clients modernising ERP, cloud, and fintech stacks needed a common baseline on licensing and privacy risk.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Takeaways</h4>
+        <ul class="modal-bullet-list">
+          <li>Processor vs controller roles in enterprise SaaS</li>
+          <li>Incident reporting norms</li>
+          <li>Contract clauses for African deployments</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '09',
+    title: 'Agricultural Value Chain Finance Roundtable',
+    desc: 'Banks, cooperatives, and processors on warehouse receipts, insurance, and TRA treatment.',
+    venue: 'Dodoma',
+    role: 'Attended',
+    dateLine: '08 Feb 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Participation</h4>
+        <p>Joined lenders and agribusinesses discussing collateral, seasonality, and export certification friction.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Discussion points</h4>
+        <ul class="modal-bullet-list">
+          <li>TFDA and TBS alignment for exports</li>
+          <li>Working capital structures</li>
+          <li>Smallholder aggregation models</li>
+        </ul>
+      </div>
+    `,
+  },
+  {
+    num: '10',
+    title: 'Annual Assurance & Internal Audit Summit (Satellite)',
+    desc: 'Observing global IA trends session with a Tanzania regulatory lens—COSO, ITGC, and fraud analytics.',
+    venue: 'Virtual · EAT',
+    role: 'Attended',
+    dateLine: '18 Jan 2024',
+    details: `
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Participation</h4>
+        <p>Firm delegates tracked emerging IA standards and mapped implications for Tanzanian listed and SOE clients.</p>
+      </div>
+      <div class="modal-sub-section">
+        <h4 class="modal-sub-title">Mapped to local practice</h4>
+        <ul class="modal-bullet-list">
+          <li>Board audit committee charters</li>
+          <li>Continuous monitoring vs statutory audit</li>
+          <li>Whistleblower and fraud hotlines</li>
         </ul>
       </div>
     `,
@@ -1133,13 +1172,12 @@ const Events = ({ openModal }) => (
         <div className="eyebrow">Calendar</div>
         <h2 className="section-heading-block__title">Events & Engagements</h2>
         <p className="section-heading-block__lead">
-          Programmes we host and forums we attend—same visual language as our sector intelligence cards.
-          Tap a card for the full rundown.
+          Hosted programmes and selected forums—open a card for venue, date, and detail.
         </p>
       </div>
 
       <div className="industries-list">
-        {firmEvents.map(({ title, desc, image, details, role, venue, dateLine }, i) => (
+        {firmEvents.map(({ title, desc, details, role, venue, dateLine }, i) => (
           <motion.div
             key={i}
             className="industry-portal"
@@ -1155,13 +1193,17 @@ const Events = ({ openModal }) => (
                 subtitle: `${role} · ${venue} · ${dateLine}`,
                 content: desc,
                 details,
-                image,
                 type: 'Event',
               })
             }
           >
             <div className="portal-overlay" />
-            <img src={image} alt={title} className="portal-image" />
+            <div
+              className="portal-image"
+              style={{ background: eventPortalGradients[i % eventPortalGradients.length] }}
+              role="img"
+              aria-hidden="true"
+            />
             <div className="portal-content">
               <div className="portal-num">{role.toUpperCase()} · {dateLine}</div>
               <h3 className="portal-title">{title}</h3>
@@ -1192,8 +1234,7 @@ const Contact = () => (
             <div className="eyebrow">Get In Touch</div>
             <h2>Consultation Request</h2>
             <p>
-              Reserve a private strategy session for your enterprise. Our senior partners
-              are available for confidential advisory engagements.
+              Use the form or the contacts below to request a confidential consultation.
             </p>
           </div>
 
