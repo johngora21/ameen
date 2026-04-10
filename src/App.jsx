@@ -5,6 +5,13 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { insightPublications } from './data/insightPublications';
 import {
+  sectorCardImages,
+  eventCardImages,
+  aboutSectionImage,
+  teamPortraitImages,
+  insightCoverImages,
+} from './data/siteImages';
+import {
   BarChart4, Gavel, FileBadge, Cpu,
   Phone, Mail, Globe, MapPin,
   ArrowRight, ArrowUpRight, ChevronRight,
@@ -16,17 +23,7 @@ function sectionHeadingAlign(i) {
   return i % 2 === 0 ? 'left' : 'center';
 }
 
-/** Initials from partner display name (no stock photos). */
-function partnerInitials(fullName) {
-  const main = fullName.split(',')[0].trim();
-  const words = main.split(/\s+/).filter(Boolean);
-  if (words.length >= 2) {
-    return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-  }
-  return main.slice(0, 2).toUpperCase();
-}
-
-/** Sector / event cards: navy–accent gradients only (no external imagery). */
+/** Sector / event cards: gradient fallback under photos if images fail to load. */
 const sectorPortalGradients = [
   'linear-gradient(155deg, #0f2847 0%, #1a4a6e 42%, #0d1f3c 100%)',
   'linear-gradient(155deg, #0c2438 0%, #14532d 45%, #0d1f3c 100%)',
@@ -191,7 +188,13 @@ const About = () => (
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <div className="about-image about-image--brand" role="img" aria-label="Brand accent" />
+          <img
+            className="about-image"
+            src={aboutSectionImage}
+            alt="Professionals collaborating in a business meeting"
+            loading="lazy"
+            decoding="async"
+          />
         </motion.div>
 
         {/* Stats: left column under copy on desktop; after image on mobile */}
@@ -367,13 +370,6 @@ const Services = ({ openModal }) => (
 );
 
 /* ─── Team ───────────────────────────────────────────────────── */
-const teamColors = [
-  'linear-gradient(135deg,#1e4799,#2563eb)',
-  'linear-gradient(135deg,#7c3aed,#a78bfa)',
-  'linear-gradient(135deg,#065f46,#10b981)',
-  'linear-gradient(135deg,#9a3412,#f97316)',
-];
-
 const members = [
   { 
     name: 'Suleiman Ameen, CPA, CFE', 
@@ -429,9 +425,13 @@ const Team = () => (
             viewport={{ once: true, margin: '-40px' }}
           >
             <div className="team-avatar">
-              <span className="team-initials" style={{ background: teamColors[i % teamColors.length] }}>
-                {partnerInitials(name)}
-              </span>
+              <img
+                src={teamPortraitImages[i % teamPortraitImages.length]}
+                alt=""
+                className="team-avatar-photo"
+                loading="lazy"
+                decoding="async"
+              />
               <div className="avatar-ring" />
             </div>
             
@@ -858,13 +858,21 @@ const Industries = ({ openModal }) => (
               })
             }
           >
-            <div className="portal-overlay"></div>
             <div
               className="portal-image"
-              style={{ background: sectorPortalGradients[i % sectorPortalGradients.length] }}
-              role="img"
-              aria-hidden="true"
-            />
+              style={{
+                '--portal-fallback': sectorPortalGradients[i % sectorPortalGradients.length],
+              }}
+            >
+              <img
+                className="portal-image-photo"
+                src={sectorCardImages[i % sectorCardImages.length]}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div className="portal-overlay" />
             <div className="portal-content">
               <div className="portal-num">{num}</div>
               <h3 className="portal-title">{title}</h3>
@@ -906,19 +914,14 @@ const AnalyticsReports = ({ openModal }) => (
               tabIndex={0}
             >
               <div className="insight-img">
+                <img
+                  className="insight-img-photo"
+                  src={insightCoverImages[i % insightCoverImages.length]}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div className="insight-img-gradient" style={{ background: item.gradient }} aria-hidden="true" />
-                <svg
-                  width="120"
-                  height="120"
-                  viewBox="0 0 120 120"
-                  className="insight-img-graphic"
-                  aria-hidden="true"
-                >
-                  <circle cx="60" cy="60" r="50" fill="none" stroke={item.shape} strokeWidth="1.5" />
-                  <circle cx="60" cy="60" r="30" fill="none" stroke={item.shape} strokeWidth="1" />
-                  <line x1="30" y1="60" x2="90" y2="60" stroke={item.shape} strokeWidth="0.75" />
-                  <line x1="60" y1="30" x2="60" y2="90" stroke={item.shape} strokeWidth="0.75" />
-                </svg>
                 <span className="insight-tag">{item.tag}</span>
               </div>
               <div className="insight-body">
@@ -1197,13 +1200,21 @@ const Events = ({ openModal }) => (
               })
             }
           >
-            <div className="portal-overlay" />
             <div
               className="portal-image"
-              style={{ background: eventPortalGradients[i % eventPortalGradients.length] }}
-              role="img"
-              aria-hidden="true"
-            />
+              style={{
+                '--portal-fallback': eventPortalGradients[i % eventPortalGradients.length],
+              }}
+            >
+              <img
+                className="portal-image-photo"
+                src={eventCardImages[i % eventCardImages.length]}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div className="portal-overlay" />
             <div className="portal-content">
               <div className="portal-num">{role.toUpperCase()} · {dateLine}</div>
               <h3 className="portal-title">{title}</h3>
@@ -1241,7 +1252,7 @@ const Contact = () => (
           <div className="contact-info">
             <div className="contact-item">
               <div className="contact-item-icon"><Mail size={18} /></div>
-              solutions@ameen.com
+              <a href="mailto:solutions@ameen.com">solutions@ameen.com</a>
             </div>
             <div className="contact-item">
               <div className="contact-item-icon"><Globe size={18} /></div>
