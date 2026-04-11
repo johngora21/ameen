@@ -1709,6 +1709,31 @@ img { display: block; max-width: 100%; }
 .text-muted { color: rgba(255,255,255,0.5); }
 .text-accent { color: var(--accent); }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.type-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  font-weight: 300;
+  color: inherit;
+  vertical-align: text-bottom;
+  animation: type-cursor-blink 1s step-end infinite;
+}
+
+@keyframes type-cursor-blink {
+  50% { opacity: 0; }
+}
+
 /* ===================================================
    RESPONSIVE
    =================================================== */

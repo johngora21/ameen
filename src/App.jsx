@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { insightPublications } from './data/insightPublications';
@@ -52,29 +52,151 @@ const eventPortalGradients = [
   'linear-gradient(160deg, #0f2847 0%, #854d0e 40%, #0d1f3c 100%)',
 ];
 
-/* ─── Animation Variants ─────────────────────────────────────── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
+/* ─── Animation: “fall from sky” (spring drop) + shared viewport ───────── */
+/** rootMargin: every value needs px or % (bare 0 breaks IntersectionObserver). */
+const viewIn = { once: true, amount: 0.22, margin: '0px 0px -40px 0px' };
+
+const HERO_SUB =
+  'We deliver trusted guidance that helps businesses navigate complexity and grow with confidence.';
+
+const HERO_LINES = [
+  { text: 'Transforming uncertainty', italic: false },
+  { text: 'into confidence', italic: false },
+  { text: 'through integrity and innovation.', italic: true },
+];
+
+/** Single-line typewriter; use aria-label on parent for accessibility. */
+function TypewriterLine({ text, start, speedMs = 30, className, as: Tag = 'span' }) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!start || n >= text.length) return;
+    const t = window.setTimeout(() => setN((c) => c + 1), speedMs);
+    return () => clearTimeout(t);
+  }, [start, n, text, speedMs]);
+  const showCursor = start && n < text.length;
+  return (
+    <Tag className={className} aria-hidden="true">
+      {text.slice(0, n)}
+      {showCursor && <span className="type-cursor">▍</span>}
+    </Tag>
+  );
+}
+
+function HeroTypewriterH1({ onComplete }) {
+  const [lineIndex, setLineIndex] = useState(0);
+  const [col, setCol] = useState(0);
+  const doneRef = useRef(false);
+  const line = HERO_LINES[lineIndex];
+  const speedMs = 26;
+  const pauseBetweenMs = 320;
+
+  useEffect(() => {
+    if (!line) return;
+    if (col < line.text.length) {
+      const t = window.setTimeout(() => setCol((c) => c + 1), speedMs);
+      return () => clearTimeout(t);
+    }
+    if (lineIndex < HERO_LINES.length - 1) {
+      const t = window.setTimeout(() => {
+        setLineIndex((i) => i + 1);
+        setCol(0);
+      }, pauseBetweenMs);
+      return () => clearTimeout(t);
+    }
+    if (!doneRef.current) {
+      doneRef.current = true;
+      onComplete?.();
+    }
+    return undefined;
+  }, [line, lineIndex, col, onComplete]);
+
+  const fullLabel = HERO_LINES.map((l) => l.text).join(' ');
+
+  return (
+    <h1 aria-label={fullLabel}>
+      <span aria-hidden="true">
+        {HERO_LINES.map((ln, i) => {
+          const slice =
+            i < lineIndex ? ln.text : i === lineIndex ? ln.text.slice(0, col) : '';
+          const showCursor =
+            i === lineIndex && line && col < line.text.length;
+          return (
+            <React.Fragment key={i}>
+              {i > 0 && <br />}
+              {ln.italic ? <em>{slice}</em> : slice}
+              {showCursor && <span className="type-cursor">▍</span>}
+            </React.Fragment>
+          );
+        })}
+      </span>
+    </h1>
+  );
+}
+
+function SectionTitleTypewriter({ text, as: Tag = 'h2', className }) {
+  const ref = useRef(null);
+  const start = useInView(ref, { once: true, amount: 0.35, margin: '0px 0px -40px 0px' });
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!start || n >= text.length) return;
+    const t = window.setTimeout(() => setN((c) => c + 1), 34);
+    return () => clearTimeout(t);
+  }, [start, n, text]);
+  return (
+    <Tag ref={ref} className={className} aria-label={text}>
+      <span aria-hidden="true">
+        {text.slice(0, n)}
+        {start && n < text.length && <span className="type-cursor">▍</span>}
+      </span>
+    </Tag>
+  );
+}
+
+const fallSky = {
+  hidden: { opacity: 0, y: -120 },
   visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.8, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }
-  })
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 420,
+      damping: 32,
+      mass: 0.88,
+      delay: i * 0.085,
+    },
+  }),
 };
 
-const fadeLeft = {
-  hidden: { opacity: 0, x: -40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
+const fallSkyHeading = {
+  hidden: { opacity: 0, y: -64 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 380, damping: 30, mass: 0.9 },
+  },
 };
 
-const fadeRight = {
-  hidden: { opacity: 0, x: 40 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } }
+const fallSkySoft = {
+  hidden: { opacity: 0, y: -48 },
+  visible: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 360,
+      damping: 30,
+      mass: 0.9,
+      delay: (i ?? 0) * 0.06,
+    },
+  }),
 };
 
 /* ─── Hero ───────────────────────────────────────────────────── */
 const heroImages = ['/hero-bg.jpg'];
 
 const Hero = () => {
+  const [heroTitleDone, setHeroTitleDone] = useState(false);
+
   return (
     <header className="hero">
       {/* Background container */}
@@ -100,32 +222,48 @@ const Hero = () => {
       {/* Content */}
       <div className="container">
         <div className="hero-content">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+          <motion.div
+            className="hero-typewriter-title-wrap"
+            initial={{ opacity: 0, y: -36 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              type: 'spring',
+              stiffness: 340,
+              damping: 28,
+              mass: 0.92,
+              delay: 0.08,
+            }}
           >
-            Transforming uncertainty
-            <br />
-            into confidence
-            <br />
-            <em>through integrity and innovation.</em>
-          </motion.h1>
+            <HeroTypewriterH1 onComplete={() => setHeroTitleDone(true)} />
+          </motion.div>
 
-          <motion.p
-            className="hero-sub"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.9 }}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.35, delay: 0.05 }}
+            aria-live="polite"
+            aria-label={HERO_SUB}
           >
-            We deliver trusted guidance that helps businesses navigate complexity and grow with confidence.
-          </motion.p>
+            <TypewriterLine
+              text={HERO_SUB}
+              start={heroTitleDone}
+              speedMs={10}
+              className="hero-sub"
+              as="p"
+            />
+          </motion.div>
 
           <motion.div
             className="hero-btns"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: -56 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 30,
+              mass: 0.88,
+              delay: 0.42,
+            }}
           >
             <a href="#services" className="btn btn-gold">
               Services <ArrowRight size={15} />
@@ -138,41 +276,51 @@ const Hero = () => {
       </div>
 
       {/* Scroll indicator */}
-      <div className="hero-scroll-line" aria-hidden="true">
+      <motion.div
+        className="hero-scroll-line"
+        aria-hidden="true"
+        initial={{ opacity: 0, y: -32 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 28, delay: 0.65 }}
+      >
         <span>Scroll</span>
         <div className="scroll-bar" />
-      </div>
+      </motion.div>
     </header>
   );
 };
 
 /* ─── About ──────────────────────────────────────────────────── */
 const stats = [
-  { value: '8+', label: 'Years in practice' },
+  { value: '4', label: 'Expert partners' },
   { value: '13', label: 'Sectors served' },
   { value: '98%', label: 'Satisfaction rate' },
 ];
 
 const About = () => (
-  <motion.section
-    id="about"
-    className="section"
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, margin: '-80px' }}
-  >
+  <section id="about" className="section">
     <div className="container">
       <div className="about-split-layout">
         {/* Text block */}
         <div className="about-text-block">
-        <motion.div variants={fadeLeft} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <div className={`section-heading-block section-heading-block--${sectionHeadingAlign(0)}`}>
-            <div className="eyebrow">About Us</div>
-            <h2 className="section-heading-block__title">About Us</h2>
-          </div>
+        <motion.div
+          className={`section-heading-block section-heading-block--${sectionHeadingAlign(0)}`}
+          variants={fallSkyHeading}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewIn}
+        >
+          <div className="eyebrow">About Us</div>
+          <SectionTitleTypewriter text="About Us" className="section-heading-block__title" />
         </motion.div>
-        <motion.div className="about-para" variants={fadeRight} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <motion.div
+          className="about-para"
+          variants={fallSkySoft}
+          custom={0}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewIn}
+        >
           <p>
             At Ameen Consultancy, we help businesses navigate complexity with confidence. Our expertise spans finance, tax, legal, and business solutions, ensuring strict compliance with regulatory standards. We provide trusted advisory and assurance services that deliver clarity, strengthen resilience, and support sustainable growth. Through strategic insight and reliable guidance, we empower businesses to thrive in an evolving global environment.
           </p>
@@ -183,10 +331,11 @@ const About = () => (
         {/* Right side image */}
         <motion.div
           className="about-image-container"
-          variants={fadeLeft}
+          variants={fallSkySoft}
+          custom={1}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={viewIn}
         >
           <img
             className="about-image"
@@ -198,51 +347,34 @@ const About = () => (
         </motion.div>
 
         {/* Stats: left column under copy on desktop; after image on mobile */}
-        <motion.div
-          className="about-stats-scroll"
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          role="region"
-          aria-label="Firm highlights"
-        >
+        <div className="about-stats-scroll" role="region" aria-label="Firm highlights">
           <div className="stats-strip">
             {stats.map(({ value, label }, i) => (
-              <div key={i} className="stat-item">
+              <motion.div
+                key={i}
+                className="stat-item"
+                variants={fallSky}
+                custom={i}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewIn}
+              >
                 <span className="stat-value">{value}</span>
                 <span className="stat-label">{label}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
 
       </div> {/* End split layout */}
     </div>
-  </motion.section>
+  </section>
 );
 
 /* ─── Services ───────────────────────────────────────────────── */
 const pillars = [
   {
-    Icon: BarChart4, num: '01',
-    title: 'Finance Solutions',
-    desc: 'Bespoke audit, accounting, and strategic M&A advisory. We provide rigorous financial intelligence and compliance for institutional entities.',
-    sections: [
-      {
-        title: 'Accounting & Assurance',
-        items: [
-          'Audit & assurance (Statutory and External)',
-          'Outsourced accounting & bookkeeping services',
-          'Financial statement preparation & technical reporting',
-          'M&A, valuation, and due diligence',
-          'Technical reporting and compliance frameworks'
-        ]
-      }
-    ]
-  },
-  {
-    Icon: FileBadge, num: '02',
+    Icon: FileBadge, num: '01',
     title: 'Tax Compliance',
     desc: 'Bespoke cross-border tax optimization and efficiency auditing. We ensure institutional compliance while maximizing fiscal health and long-term viability.',
     sections: [
@@ -262,6 +394,23 @@ const pillars = [
           'Handling TRA audits and resolving tax disputes',
           'Guidance on local taxes (Property tax, Service levy)',
           'Tax compliance for cross-border trade (EAC and SADC regulations)'
+        ]
+      }
+    ]
+  },
+  {
+    Icon: BarChart4, num: '02',
+    title: 'Finance Solutions',
+    desc: 'Bespoke audit, accounting, and strategic M&A advisory. We provide rigorous financial intelligence and compliance for institutional entities.',
+    sections: [
+      {
+        title: 'Accounting & Assurance',
+        items: [
+          'Audit & assurance (Statutory and External)',
+          'Outsourced accounting & bookkeeping services',
+          'Financial statement preparation & technical reporting',
+          'M&A, valuation, and due diligence',
+          'Technical reporting and compliance frameworks'
         ]
       }
     ]
@@ -330,13 +479,19 @@ const pillars = [
 const Services = ({ openModal }) => (
   <section id="services" className="section bg-soft">
     <div className="container">
-      <div className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(1)}`}>
+      <motion.div
+        className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(1)}`}
+        variants={fallSkyHeading}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewIn}
+      >
         <div className="eyebrow eyebrow--title-case">Our Professional Services</div>
-        <h2>What We Offer</h2>
+        <SectionTitleTypewriter text="What We Offer" />
         <p style={{ fontSize: '1.05rem' }}>
           Integrated advisory for institutions that need depth across finance, tax, legal, and operations.
         </p>
-      </div>
+      </motion.div>
 
       <div className="services-scroll" role="region" aria-label="Service pillars">
         <div className="services-grid">
@@ -345,10 +500,10 @@ const Services = ({ openModal }) => (
             key={i}
             className="service-card"
             custom={i}
-            variants={fadeUp}
+            variants={fallSky}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
+            viewport={viewIn}
             style={{ cursor: 'pointer' }}
             onClick={() => openModal({ ...pillars[i], type: 'Service' })}
           >
@@ -398,10 +553,10 @@ const Team = () => (
     <div className="container">
       <motion.div
         className={`team-header section-heading-block section-heading-block--${sectionHeadingAlign(3)}`}
-        variants={fadeUp}
+        variants={fallSkyHeading}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
+        viewport={viewIn}
       >
         <div className="eyebrow" style={{ color: 'var(--accent)' }}>
           Our team
@@ -419,10 +574,10 @@ const Team = () => (
             key={i}
             className="team-card"
             custom={i}
-            variants={fadeUp}
+            variants={fallSky}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
+            viewport={viewIn}
           >
             <div className="team-avatar">
               <img
@@ -819,22 +974,21 @@ const sectors = [
 ];
 
 const Industries = ({ openModal }) => (
-  <motion.section
-    id="industries"
-    className="section"
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true }}
-  >
+  <section id="industries" className="section">
     <div className="container">
-      <div className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(2)}`}>
+      <motion.div
+        className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(2)}`}
+        variants={fallSkyHeading}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewIn}
+      >
         <div className="eyebrow">Global Reach</div>
         <h2 className="section-heading-block__title">Strategic Sector Intelligence</h2>
         <p className="section-heading-block__lead">
           Multisector coverage—audit, diligence, and risk for large projects and global enterprises.
         </p>
-      </div>
+      </motion.div>
 
       <div className="industries-list">
         {sectors.map(({ num, title, overview, policy, details, Icon }, i) => (
@@ -842,10 +996,10 @@ const Industries = ({ openModal }) => (
             key={i}
             className="industry-portal"
             custom={i}
-            variants={fadeUp}
+            variants={fallSky}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={viewIn}
             style={{ cursor: 'pointer' }}
             onClick={() =>
               openModal({
@@ -882,19 +1036,25 @@ const Industries = ({ openModal }) => (
         ))}
       </div>
     </div>
-  </motion.section>
+  </section>
 );
 
 const AnalyticsReports = ({ openModal }) => (
   <section id="analytics" className="section bg-soft">
     <div className="container">
-      <div className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(4)}`}>
+      <motion.div
+        className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(4)}`}
+        variants={fallSkyHeading}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewIn}
+      >
         <div className="eyebrow">Analytics</div>
         <h2>Analytics & Reports</h2>
         <p style={{ fontSize: '1.05rem', maxWidth: '42rem' }}>
           Tanzania analytics and reference notes drawn from public regulatory and official sources.
         </p>
-      </div>
+      </motion.div>
 
       <div className="insights-scroll" role="region" aria-label="Tanzania analytics reports">
         <div className="insights-track">
@@ -903,10 +1063,10 @@ const AnalyticsReports = ({ openModal }) => (
               key={`${item.num}-${item.title}`}
               className="insight-card"
               custom={i}
-              variants={fadeUp}
+              variants={fallSky}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+              viewport={viewIn}
               style={{ cursor: 'pointer' }}
               onClick={() => openModal({ ...item, content: item.desc })}
               onKeyDown={(e) => e.key === 'Enter' && openModal({ ...item, content: item.desc })}
@@ -1162,22 +1322,21 @@ const firmEvents = [
 ];
 
 const Events = ({ openModal }) => (
-  <motion.section
-    id="events"
-    className="section"
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true }}
-  >
+  <section id="events" className="section">
     <div className="container">
-      <div className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(5)}`}>
+      <motion.div
+        className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(5)}`}
+        variants={fallSkyHeading}
+        initial="hidden"
+        whileInView="visible"
+        viewport={viewIn}
+      >
         <div className="eyebrow">Calendar</div>
         <h2 className="section-heading-block__title">Events & Engagements</h2>
         <p className="section-heading-block__lead">
           Hosted programmes and selected forums—open a card for venue, date, and detail.
         </p>
-      </div>
+      </motion.div>
 
       <div className="industries-list">
         {firmEvents.map(({ title, desc, details, role, venue, dateLine }, i) => (
@@ -1185,10 +1344,10 @@ const Events = ({ openModal }) => (
             key={i}
             className="industry-portal"
             custom={i}
-            variants={fadeUp}
+            variants={fallSky}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={viewIn}
             style={{ cursor: 'pointer' }}
             onClick={() =>
               openModal({
@@ -1224,32 +1383,38 @@ const Events = ({ openModal }) => (
         ))}
       </div>
     </div>
-  </motion.section>
+  </section>
 );
 
 /* ─── Contact ────────────────────────────────────────────────── */
 const Contact = () => (
-  <motion.section
-    id="contact"
-    className="section"
-    variants={fadeUp}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true }}
-  >
+  <section id="contact" className="section">
     <div className="container">
       <div className="contact-grid">
         {/* Left */}
         <div className="contact-left">
-          <div className={`section-heading-block section-heading-block--${sectionHeadingAlign(6)}`}>
+          <motion.div
+            className={`section-heading-block section-heading-block--${sectionHeadingAlign(6)}`}
+            variants={fallSkyHeading}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewIn}
+          >
             <div className="eyebrow">Get In Touch</div>
             <h2>Consultation Request</h2>
             <p>
               Use the form or the contacts below to request a confidential consultation.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="contact-info">
+          <motion.div
+            className="contact-info"
+            variants={fallSkySoft}
+            custom={1}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewIn}
+          >
             <div className="contact-item">
               <div className="contact-item-icon"><Mail size={18} /></div>
               <a href="mailto:solutions@ameen.com">solutions@ameen.com</a>
@@ -1262,27 +1427,42 @@ const Contact = () => (
               <div className="contact-item-icon"><MapPin size={18} /></div>
               Dar es Salaam, Tanzania
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right — form */}
-        <motion.div
-          className="form-card"
-          variants={fadeRight}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <div className="form-card">
           <form onSubmit={e => e.preventDefault()}>
-            <div className="form-group">
+            <motion.div
+              className="form-group"
+              variants={fallSky}
+              custom={0}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewIn}
+            >
               <label>Full Name</label>
               <input type="text" placeholder="Your Full Name" id="contact-name" />
-            </div>
-            <div className="form-group">
+            </motion.div>
+            <motion.div
+              className="form-group"
+              variants={fallSky}
+              custom={1}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewIn}
+            >
               <label>Organisation</label>
               <input type="text" placeholder="Company / Institution" id="contact-org" />
-            </div>
-            <div className="form-group">
+            </motion.div>
+            <motion.div
+              className="form-group"
+              variants={fallSky}
+              custom={2}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewIn}
+            >
               <label>Service Area</label>
               <select id="contact-service">
                 <option value="">Select a service...</option>
@@ -1291,22 +1471,37 @@ const Contact = () => (
                 <option>Legal Advisory</option>
                 <option>Business Solutions</option>
               </select>
-            </div>
-            <div className="form-group">
+            </motion.div>
+            <motion.div
+              className="form-group"
+              variants={fallSky}
+              custom={3}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewIn}
+            >
               <label>Message</label>
               <textarea
                 id="contact-message"
                 placeholder="Outline your requirements and objectives..."
               />
-            </div>
-            <button className="btn btn-primary form-submit" type="submit">
+            </motion.div>
+            <motion.button
+              className="btn btn-primary form-submit"
+              type="submit"
+              variants={fallSky}
+              custom={4}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewIn}
+            >
               Submit Inquiry <ArrowRight size={15} />
-            </button>
+            </motion.button>
           </form>
-        </motion.div>
+        </div>
       </div>
     </div>
-  </motion.section>
+  </section>
 );
 
 /* ─── App ────────────────────────────────────────────────────── */
@@ -1314,6 +1509,13 @@ const App = () => {
   const [modalData, setModalData] = useState(null);
   const [modalMobileSheet, setModalMobileSheet] = useState(false);
   const location = useLocation();
+
+  /* Home route with no hash: start at hero (top). Hash links still deep-scroll. */
+  useLayoutEffect(() => {
+    if (location.pathname !== '/') return;
+    if (location.hash) return;
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.hash, location.key]);
 
   useEffect(() => {
     const id = location.hash?.replace(/^#/, '');
