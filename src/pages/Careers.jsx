@@ -29,7 +29,7 @@ export default function Careers() {
               <div className="eyebrow">Join us</div>
               <h1>Careers at Ameen</h1>
               <p className="careers-lead">
-                Roles in audit, tax, legal, and advisory for people who want institutional-grade, discreet work.
+                Roles in tax, accounting, and legal for people who want professional, discreet work.
               </p>
               <a href="mailto:careers@ameen.com?subject=Careers%20inquiry" className="btn btn-primary">
                 Email careers <ArrowRight size={16} />

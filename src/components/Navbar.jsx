@@ -47,7 +47,7 @@ export default function Navbar() {
     >
       <div className="nav-container">
         <Link to="/" className="logo nav-brand-logo" onClick={closeMenu}>
-          Ameen <span>·</span> Consultancy
+          Ameen <span>·</span> Consultants
         </Link>
         <button
           type="button"
@@ -67,7 +67,6 @@ export default function Navbar() {
         >
           <a href={`${hashPrefix}#about`} onClick={closeMenu}>About</a>
           <a href={`${hashPrefix}#services`} onClick={closeMenu}>Services</a>
-          <a href={`${hashPrefix}#team`} onClick={closeMenu}>Partners</a>
           <a href={`${hashPrefix}#industries`} onClick={closeMenu}>Sectors</a>
           <a href={`${hashPrefix}#analytics`} onClick={closeMenu}>Analytics</a>
           <a href={`${hashPrefix}#events`} onClick={closeMenu}>Events</a>

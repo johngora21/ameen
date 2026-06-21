@@ -11,17 +11,16 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link to="/" className="logo">
-              AMEEN <span style={{ color: 'var(--accent)' }}>·</span> CONSULTANCY
+              AMEEN <span style={{ color: 'var(--accent)' }}>·</span> CONSULTANTS
             </Link>
             <p>
-              Executive advisory from Tanzania for strategy, finance, and institutional legal risk.
+              Guiding businesses with integrity, professionalism and expertise across accounting, tax and legal services.
             </p>
           </div>
 
           <nav className="footer-pairs" aria-label="Footer">
             <Link to="/">Company</Link>
             <a href={`${p}#about`}>About</a>
-            <a href={`${p}#team`}>Partners</a>
             <a href={`${p}#industries`}>Sectors</a>
             <a href={`${p}#analytics`}>Analytics</a>
             <a href={`${p}#events`}>Events</a>
@@ -37,7 +36,7 @@ export default function Footer() {
         <hr className="footer-divider" />
 
         <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} Ameen Consultancy International. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Ameen Consultants. All rights reserved.</p>
           <span>Strategic Excellence · Tactical Integrity</span>
         </div>
       </div>

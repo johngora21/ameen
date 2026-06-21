@@ -8,17 +8,16 @@ import {
   sectorCardImages,
   eventCardImages,
   aboutSectionImage,
-  teamPortraitImages,
   insightCoverImages,
 } from './data/siteImages';
 import {
   BarChart4, Gavel, FileBadge, Cpu,
-  Phone, Mail, Globe, MapPin,
+  Mail, Globe, MapPin, Phone,
   ArrowRight, ArrowUpRight, ChevronRight,
   Users, Shield, X
 } from 'lucide-react';
 
-/** Alternating section titles: About=left, Services=center, Industries=left, Team=center, … */
+/** Alternating section titles: About=left, Services=center, Industries=left, Analytics=center, … */
 function sectionHeadingAlign(i) {
   return i % 2 === 0 ? 'left' : 'center';
 }
@@ -57,12 +56,11 @@ const eventPortalGradients = [
 const viewIn = { once: true, amount: 0.22, margin: '0px 0px -40px 0px' };
 
 const HERO_SUB =
-  'We deliver trusted guidance that helps businesses navigate complexity and grow with confidence.';
+  'Your trusted partner in accounting, tax and legal services.';
 
 const HERO_LINES = [
-  { text: 'Transforming uncertainty', italic: false },
-  { text: 'into confidence', italic: false },
-  { text: 'through integrity and innovation.', italic: true },
+  { text: 'Guiding businesses with integrity,', italic: false },
+  { text: 'professionalism and expertise.', italic: false },
 ];
 
 /** Single-line typewriter; use aria-label on parent for accessibility. */
@@ -292,7 +290,7 @@ const Hero = () => {
 
 /* ─── About ──────────────────────────────────────────────────── */
 const stats = [
-  { value: '4', label: 'Expert partners' },
+  { value: '3', label: 'Core services' },
   { value: '13', label: 'Sectors served' },
   { value: '98%', label: 'Satisfaction rate' },
 ];
@@ -322,7 +320,10 @@ const About = () => (
           viewport={viewIn}
         >
           <p>
-            At Ameen Consultancy, we help businesses navigate complexity with confidence. Our expertise spans finance, tax, legal, and business solutions, ensuring strict compliance with regulatory standards. We provide trusted advisory and assurance services that deliver clarity, strengthen resilience, and support sustainable growth. Through strategic insight and reliable guidance, we empower businesses to thrive in an evolving global environment.
+            At Ameen Consultants, we collaborate with businesses to tackle complex regulations with confidence. Our expertise spans tax advisory, accounting, and legal services — delivered with professionalism and strict attention to compliance.
+          </p>
+          <p>
+            Through strategic insight and reliable guidance, we empower businesses to thrive in an evolving regulatory environment.
           </p>
         </motion.div>
 
@@ -375,105 +376,76 @@ const About = () => (
 const pillars = [
   {
     Icon: FileBadge, num: '01',
-    title: 'Tax Compliance',
-    desc: 'Bespoke cross-border tax optimization and efficiency auditing. We ensure institutional compliance while maximizing fiscal health and long-term viability.',
+    title: 'Tax Services',
+    desc: 'Expert tax planning and efficiency optimisation tailored to Tanzanian businesses. We ensure regulatory compliance while supporting sustainable growth.',
     sections: [
       {
         title: 'Core Tax Services',
         items: [
-          'Tax planning for compliance with TRA regulations',
-          'Filing corporate income tax (CIT), VAT, PAYE, and Withholding taxes',
-          'Support with tax filing and payment requirements',
-          'Maintenance of tax position summaries and deadline monitoring'
-        ]
+          'Monthly filing of returns (PAYE, SDL, VAT, WHT)',
+          'Filing annual corporate income tax returns (SETPI & ROI)',
+          'Guidance through tax dispute resolution — audit findings, objections, and TRA correspondence',
+          'Maintenance of tax position summaries and deadline monitoring',
+        ],
       },
       {
-        title: 'Specialized Advisory',
+        title: 'Specialized Tax Advisory',
         items: [
-          'Advisory on tax incentives (Export Processing Zones / Special Economic Zones)',
-          'Handling TRA audits and resolving tax disputes',
-          'Guidance on local taxes (Property tax, Service levy)',
-          'Tax compliance for cross-border trade (EAC and SADC regulations)'
-        ]
-      }
-    ]
+          'Guidance on local taxes — Service Levy, Property Tax, and Infrastructure Levy',
+          'Tailored tax advisory for your business structure and operations',
+          'Advisory on day-to-day tax matters affecting business decisions',
+        ],
+      },
+    ],
   },
   {
     Icon: BarChart4, num: '02',
-    title: 'Finance Solutions',
-    desc: 'Bespoke audit, accounting, and strategic M&A advisory. We provide rigorous financial intelligence and compliance for institutional entities.',
+    title: 'Accounting Services',
+    desc: 'Accurate financial records and reporting that support sound business decisions and regulatory confidence.',
     sections: [
       {
-        title: 'Accounting & Assurance',
+        title: 'Core Accounting Services',
         items: [
-          'Audit & assurance (Statutory and External)',
-          'Outsourced accounting & bookkeeping services',
-          'Financial statement preparation & technical reporting',
-          'M&A, valuation, and due diligence',
-          'Technical reporting and compliance frameworks'
-        ]
-      }
-    ]
+          'Maintaining monthly books of accounts and records',
+          'Preparation of annual financial statements',
+          'Preparation of draft accounts',
+          'Preparation of monthly payroll',
+        ],
+      },
+    ],
   },
   {
     Icon: Gavel, num: '03',
-    title: 'Legal Advisory',
-    desc: 'Global regulatory compliance, corporate governance, and complex dispute resolution frameworks for multi-national entities operating across jurisdictions.',
+    title: 'Legal Services',
+    desc: 'Professional legal support for businesses throughout their lifecycle — from incorporation to ongoing statutory compliance.',
     sections: [
       {
-        title: 'Intellectual Property & IP',
+        title: 'Company (LLC) Services',
         items: [
-          'Application for Registration of a Trademark',
-          'Application for a Patent or Industrial Design',
-          'Trademarks and business names protection'
-        ]
+          'End-to-end company incorporation through BRELA',
+          'Preparation of Memorandum and Articles of Association (MEMARTS)',
+          'Company name search and reservation',
+          'Assistance in obtaining relevant business licences',
+          'Filing annual returns and maintaining statutory records',
+        ],
       },
       {
-        title: 'NGO & Institutional Setup',
+        title: 'Business Registration',
         items: [
-          'NGO structuring (Non-Governmental Organizations Act, 2002)',
-          'Registration with the Registrar of NGOs',
-          'Drafting constitutions and governance documents',
-          'Obtaining tax-exempt status for charitable activities'
-        ]
-      }
-    ]
+          'Business name registration (sole proprietorship)',
+          'Partnership formation services',
+        ],
+      },
+      {
+        title: 'Specialized Registration',
+        items: [
+          'NGO registration',
+          'Society registration services',
+          'Trust registration services',
+        ],
+      },
+    ],
   },
-  {
-    Icon: Cpu, num: '04',
-    title: 'Business Solutions',
-    desc: 'Complete business registration and operational licensing solutions. We streamline corporate setup from initial filing to full sector-specific compliance.',
-    sections: [
-      {
-        title: 'Registration & Setup',
-        items: [
-          'Business structure advisory (Sole, Partnership, LLC)',
-          'BRELA registration, filing and preparation of MEMART (Name search, reservation, and submission)',
-          'Obtaining TIN and VAT registration with TRA',
-          'Assistance with opening business bank accounts',
-          'Registration with local government authorities'
-        ]
-      },
-      {
-        title: 'Digital & Systems Strategy',
-        items: [
-          'IT Audit & Systems Assurance',
-          'Data Analytics & Business Intelligence',
-          'Digital transformation (ERP, AI systems implementations)',
-          'Process automation and operational scaling'
-        ]
-      },
-      {
-        title: 'Compliance Forms & Licensing',
-        items: [
-          'Lodge forms (Notice of change, Director particulars, Allotment of shares)',
-          'Sector-specific permits and local government business licenses',
-          'Health, Safety, and Environmental regulation compliance',
-          'Managing renewals through BRELA and industry bodies'
-        ]
-      }
-    ]
-  }
 ];
 
 const Services = ({ openModal }) => (
@@ -489,7 +461,7 @@ const Services = ({ openModal }) => (
         <div className="eyebrow eyebrow--title-case">Our Professional Services</div>
         <SectionTitleTypewriter text="What We Offer" />
         <p style={{ fontSize: '1.05rem' }}>
-          Integrated advisory for institutions that need depth across finance, tax, legal, and operations.
+          Integrated tax, accounting, and legal advisory tailored for Tanzanian businesses.
         </p>
       </motion.div>
 
@@ -516,93 +488,6 @@ const Services = ({ openModal }) => (
             <button className="service-link" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
               Enquire <ArrowUpRight size={14} />
             </button>
-          </motion.div>
-        ))}
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
-/* ─── Team ───────────────────────────────────────────────────── */
-const members = [
-  { 
-    name: 'Suleiman Ameen, CPA, CFE', 
-    role: 'Managing Partner', 
-    bio: 'A distinguished expert in statutory audit and financial investigation. As a Certified Public Accountant and Certified Fraud Examiner, he has spearheaded complex restructuring and high-stakes financial intelligence for multinational entities across East Africa and the Middle East.',
-  },
-  { 
-    name: 'Dr. Sarah Thorne, CIA, CISA', 
-    role: 'Senior Partner · Risk & Assurance', 
-    bio: 'Specializing in sovereign risk and institutional resilience. With two decades of experience in the Big Four, she advises NGOs and global development agencies on internal audit frameworks and systemic project impact assessments.',
-  },
-  { 
-    name: 'Arthur Vance, CISA, PMP', 
-    role: 'Partner · Systems & Digital Strategy', 
-    bio: 'Architecting digital resilience for modern enterprises. A leading Information Systems Auditor with a deep focus on ERP integrity, cybersecurity governance, and technical due diligence for cross-border M&A operations.',
-  },
-  { 
-    name: 'Linda Kemp, CGAP, MEL', 
-    role: 'Partner · Public Sector & Development', 
-    bio: 'An authority on public sector capital allocation and social impact monitoring. Her global footprint includes strategic advisory for the World Bank and UN-affiliated NGOs on large-scale developmental infrastructure projects.',
-  },
-];
-
-const Team = () => (
-  <section id="team" className="section team-section">
-    <div className="container">
-      <motion.div
-        className={`team-header section-heading-block section-heading-block--${sectionHeadingAlign(3)}`}
-        variants={fallSkyHeading}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewIn}
-      >
-        <div className="eyebrow" style={{ color: 'var(--accent)' }}>
-          Our team
-        </div>
-        <h2>Meet our Partners</h2>
-        <p>
-          Partners and senior specialists across audit, risk, systems, and public-sector programmes.
-        </p>
-      </motion.div>
-
-      <div className="team-scroll" role="region" aria-label="Partners and team">
-        <div className="team-grid">
-        {members.map(({ name, role, bio }, i) => (
-          <motion.div
-            key={i}
-            className="team-card"
-            custom={i}
-            variants={fallSky}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewIn}
-          >
-            <div className="team-avatar">
-              <img
-                src={teamPortraitImages[i % teamPortraitImages.length]}
-                alt=""
-                className="team-avatar-photo"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="avatar-ring" />
-            </div>
-            
-            <div className="team-card-content">
-              <h3>{name}</h3>
-              <p className="team-role">{role}</p>
-              
-              <p className="team-bio">{bio}</p>
-              
-              <div className="team-footer">
-                <div className="team-social">
-                  <a href="#" aria-label="Phone"><Phone size={14} /></a>
-                  <a href="#" aria-label="Email"><Mail size={14} /></a>
-                </div>
-              </div>
-            </div>
           </motion.div>
         ))}
         </div>
@@ -1043,7 +928,7 @@ const AnalyticsReports = ({ openModal }) => (
   <section id="analytics" className="section bg-soft">
     <div className="container">
       <motion.div
-        className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(4)}`}
+        className={`services-header section-heading-block section-heading-block--${sectionHeadingAlign(3)}`}
         variants={fallSkyHeading}
         initial="hidden"
         whileInView="visible"
@@ -1101,220 +986,92 @@ const AnalyticsReports = ({ openModal }) => (
 const firmEvents = [
   {
     num: '01',
-    title: 'East Africa Institutional Risk Roundtable',
-    desc: 'Hosted roundtable for CFOs and general counsel on risk, FX, and assurance across the EAC.',
+    title: 'TRA IDRAS Capacity-Building Programme',
+    desc: 'Nationwide training for tax consultants on Tanzania\'s Integrated Domestic Revenue Administration System (IDRAS).',
     venue: 'Dar es Salaam',
-    role: 'Hosted',
-    dateLine: '18 Mar 2025',
+    role: 'Attended',
+    dateLine: 'Jan 2026',
     details: `
       <div class="modal-sub-section">
         <h4 class="modal-sub-title">Overview</h4>
-        <p>Closed-door Ameen-hosted session convening CFOs, heads of internal audit, and general counsel from banks, telecoms, and industrials with East African operations.</p>
+        <p>Ameen Consultants joined tax consultants and practitioners in TRA-led training on IDRAS—the authority's new unified digital platform for registration, returns, payments, and taxpayer correspondence.</p>
       </div>
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Themes discussed</h4>
+        <h4 class="modal-sub-title">Key focus areas</h4>
         <ul class="modal-bullet-list">
-          <li>Sovereign and currency risk in multi-country treasury structures</li>
-          <li>Board reporting on assurance, fraud, and regulatory examinations</li>
-          <li>Coordination with development finance and donor compliance</li>
+          <li>Navigating the IDRAS taxpayer portal and self-service workflows</li>
+          <li>Digital filing of PAYE, SDL, VAT, WHT, and corporate income tax returns</li>
+          <li>Transition from legacy TRA systems and supporting client readiness</li>
+          <li>Practical guidance on compliance under the new administration framework</li>
         </ul>
       </div>
     `,
   },
   {
     num: '02',
-    title: 'TRA & Private Sector Tax Dialogue',
-    desc: 'Satellite session on digital filing, disputes, and withholding—Dar es Salaam.',
+    title: 'Corporate & Regulatory Legal Training',
+    desc: 'Professional development session on company law, BRELA compliance, and statutory obligations for businesses.',
     venue: 'Dar es Salaam',
-    role: 'Attended',
-    dateLine: '06 Feb 2025',
+    role: 'Hosted',
+    dateLine: 'Mar 2026',
     details: `
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Participation</h4>
-        <p>Our tax partners joined industry peers in a TRA-adjacent dialogue focused on practical compliance and dispute trends affecting large taxpayers.</p>
+        <h4 class="modal-sub-title">Overview</h4>
+        <p>Ameen Consultants hosted a legal training programme for clients and business owners, strengthening understanding of incorporation, governance, and ongoing regulatory requirements in Tanzania.</p>
       </div>
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Focus areas</h4>
+        <h4 class="modal-sub-title">Topics covered</h4>
         <ul class="modal-bullet-list">
-          <li>E-invoicing and VAT administration</li>
-          <li>Withholding on cross-border services</li>
-          <li>Settlement and objection timelines</li>
+          <li>Company incorporation, MEMARTS, and BRELA filing obligations</li>
+          <li>Annual returns, statutory records, and director responsibilities</li>
+          <li>Business licences and partnership or sole proprietorship structures</li>
+          <li>NGO, society, and trust registration essentials</li>
         </ul>
       </div>
     `,
   },
   {
     num: '03',
-    title: 'African Infrastructure & PPP Forum',
-    desc: 'Attended alongside sponsors and DFIs on project finance and Tanzanian pipeline themes.',
-    venue: 'Nairobi',
-    role: 'Attended',
-    dateLine: '22 Nov 2024',
+    title: 'National Budget 2026/27 Stakeholder Engagement',
+    desc: 'Client briefing on fiscal policy, tax measures, and business implications of the 2026/27 national budget.',
+    venue: 'Dar es Salaam',
+    role: 'Hosted',
+    dateLine: 'Jun 2026',
     details: `
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Why we were there</h4>
-        <p>Representation to track infrastructure procurement, PPP structuring, and financing patterns that inform Tanzanian project pipelines and due diligence mandates.</p>
+        <h4 class="modal-sub-title">Overview</h4>
+        <p>We convened business leaders, finance teams, and stakeholders for a structured engagement on Tanzania's 2026/27 national budget—translating policy announcements into practical compliance and planning priorities.</p>
       </div>
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Takeaways</h4>
+        <h4 class="modal-sub-title">Discussion themes</h4>
         <ul class="modal-bullet-list">
-          <li>Risk allocation between public authorities and sponsors</li>
-          <li>DFI co-financing and ESG covenants</li>
-          <li>Cross-border guarantees and offtake structures</li>
+          <li>Revenue measures and their impact on corporate and individual taxpayers</li>
+          <li>Proposed changes affecting VAT, PAYE, SDL, and local levies</li>
+          <li>Sector-specific fiscal incentives and compliance timelines</li>
+          <li>Planning steps for finance, tax, and legal teams ahead of the new fiscal year</li>
         </ul>
       </div>
     `,
   },
   {
     num: '04',
-    title: 'Client Briefing: Corporate Governance 2025',
-    desc: 'Invite-only hybrid briefing on BRELA, beneficial ownership, and audit committees.',
-    venue: 'Hybrid · Dar es Salaam',
+    title: 'Bagamoyo Community CSR Initiative',
+    desc: 'Corporate social responsibility outreach supporting local institutions and communities in Bagamoyo.',
+    venue: 'Bagamoyo',
     role: 'Hosted',
-    dateLine: '09 Oct 2024',
+    dateLine: 'May 2026',
     details: `
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Audience</h4>
-        <p>Annual Ameen briefing for portfolio companies and long-standing institutional clients—directors, company secretaries, and finance leads.</p>
+        <h4 class="modal-sub-title">Overview</h4>
+        <p>As part of our commitment to giving back, Ameen Consultants led a CSR initiative in Bagamoyo—engaging directly with local communities and contributing resources to institutions that serve the area.</p>
       </div>
       <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Agenda highlights</h4>
+        <h4 class="modal-sub-title">Initiative highlights</h4>
         <ul class="modal-bullet-list">
-          <li>BRELA filings and beneficial-ownership registers</li>
-          <li>Audit committee cadence and external auditor oversight</li>
-          <li>Related-party and governance disclosures</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '05',
-    title: 'EAC CFO & Treasury Exchange',
-    desc: 'Regional peer exchange on liquidity, hedging, and cross-border tax administration.',
-    venue: 'Arusha',
-    role: 'Attended',
-    dateLine: '14 Aug 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Focus</h4>
-        <p>East African finance leaders comparing treasury practice, TRA interfaces, and donor-reporting alignment.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Topics</h4>
-        <ul class="modal-bullet-list">
-          <li>Multi-entity cash pooling</li>
-          <li>VAT and customs in the customs union</li>
-          <li>DFI covenant reporting</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '06',
-    title: 'HR & Payroll Compliance Clinic',
-    desc: 'Half-day working session on PAYE, SDL, and statutory filings for scaling employers.',
-    venue: 'Dar es Salaam',
-    role: 'Hosted',
-    dateLine: '27 Jun 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Audience</h4>
-        <p>HR directors and payroll leads from manufacturing, retail, and NGO sectors.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Covered</h4>
-        <ul class="modal-bullet-list">
-          <li>PAYE bands and benefit-in-kind</li>
-          <li>NSSF / PSSSF updates</li>
-          <li>Skills development levy mechanics</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '07',
-    title: 'Mining & Extractives Disclosure Forum',
-    desc: 'Panel on EITI-style reporting, local content, and assurance expectations for listed operators.',
-    venue: 'Dar es Salaam',
-    role: 'Attended',
-    dateLine: '30 Apr 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Context</h4>
-        <p>Dialogue with operators, regulators, and investors on transparency and audit-ready project economics.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Themes</h4>
-        <ul class="modal-bullet-list">
-          <li>Production-sharing and fiscal terms</li>
-          <li>Community development agreements</li>
-          <li>Independent assurance on reserves</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '08',
-    title: 'Digital Services & Data Protection Breakfast',
-    desc: 'Briefing on TCRA expectations, cross-border data flows, and vendor due diligence.',
-    venue: 'Dar es Salaam',
-    role: 'Hosted',
-    dateLine: '12 Mar 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Why it mattered</h4>
-        <p>Clients modernising ERP, cloud, and fintech stacks needed a common baseline on licensing and privacy risk.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Takeaways</h4>
-        <ul class="modal-bullet-list">
-          <li>Processor vs controller roles in enterprise SaaS</li>
-          <li>Incident reporting norms</li>
-          <li>Contract clauses for African deployments</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '09',
-    title: 'Agricultural Value Chain Finance Roundtable',
-    desc: 'Banks, cooperatives, and processors on warehouse receipts, insurance, and TRA treatment.',
-    venue: 'Dodoma',
-    role: 'Attended',
-    dateLine: '08 Feb 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Participation</h4>
-        <p>Joined lenders and agribusinesses discussing collateral, seasonality, and export certification friction.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Discussion points</h4>
-        <ul class="modal-bullet-list">
-          <li>TFDA and TBS alignment for exports</li>
-          <li>Working capital structures</li>
-          <li>Smallholder aggregation models</li>
-        </ul>
-      </div>
-    `,
-  },
-  {
-    num: '10',
-    title: 'Annual Assurance & Internal Audit Summit (Satellite)',
-    desc: 'Observing global IA trends session with a Tanzania regulatory lens—COSO, ITGC, and fraud analytics.',
-    venue: 'Virtual · EAT',
-    role: 'Attended',
-    dateLine: '18 Jan 2024',
-    details: `
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Participation</h4>
-        <p>Firm delegates tracked emerging IA standards and mapped implications for Tanzanian listed and SOE clients.</p>
-      </div>
-      <div class="modal-sub-section">
-        <h4 class="modal-sub-title">Mapped to local practice</h4>
-        <ul class="modal-bullet-list">
-          <li>Board audit committee charters</li>
-          <li>Continuous monitoring vs statutory audit</li>
-          <li>Whistleblower and fraud hotlines</li>
+          <li>Support for local schools and community-facing institutions</li>
+          <li>Team volunteer engagement with residents and community leaders</li>
+          <li>Materials and supplies directed to identified local needs</li>
+          <li>Ongoing commitment to responsible corporate citizenship beyond advisory work</li>
         </ul>
       </div>
     `,
@@ -1325,7 +1082,7 @@ const Events = ({ openModal }) => (
   <section id="events" className="section">
     <div className="container">
       <motion.div
-        className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(5)}`}
+        className={`industries-header section-heading-block section-heading-block--${sectionHeadingAlign(4)}`}
         variants={fallSkyHeading}
         initial="hidden"
         whileInView="visible"
@@ -1334,7 +1091,7 @@ const Events = ({ openModal }) => (
         <div className="eyebrow">Calendar</div>
         <h2 className="section-heading-block__title">Events & Engagements</h2>
         <p className="section-heading-block__lead">
-          Hosted programmes and selected forums—open a card for venue, date, and detail.
+          Training, stakeholder forums, and community initiatives—open a card for venue, date, and detail.
         </p>
       </motion.div>
 
@@ -1394,7 +1151,7 @@ const Contact = () => (
         {/* Left */}
         <div className="contact-left">
           <motion.div
-            className={`section-heading-block section-heading-block--${sectionHeadingAlign(6)}`}
+            className={`section-heading-block section-heading-block--${sectionHeadingAlign(5)}`}
             variants={fallSkyHeading}
             initial="hidden"
             whileInView="visible"
@@ -1420,12 +1177,12 @@ const Contact = () => (
               <a href="mailto:solutions@ameen.com">solutions@ameen.com</a>
             </div>
             <div className="contact-item">
-              <div className="contact-item-icon"><Globe size={18} /></div>
-              Tanzanian Global HQ
+              <div className="contact-item-icon"><Phone size={18} /></div>
+              <a href="tel:+255789110050">+255 789 110 050</a>
             </div>
             <div className="contact-item">
               <div className="contact-item-icon"><MapPin size={18} /></div>
-              Dar es Salaam, Tanzania
+              Dar Free Market, Ground Floor, Ali Hassan Mwinyi Road, Dar es Salaam
             </div>
           </motion.div>
         </div>
@@ -1466,10 +1223,9 @@ const Contact = () => (
               <label>Service Area</label>
               <select id="contact-service">
                 <option value="">Select a service...</option>
-                <option>Finance Solutions</option>
-                <option>Tax Compliance</option>
-                <option>Legal Advisory</option>
-                <option>Business Solutions</option>
+                <option>Tax Services</option>
+                <option>Accounting Services</option>
+                <option>Legal Services</option>
               </select>
             </motion.div>
             <motion.div
@@ -1546,7 +1302,6 @@ const App = () => {
       <About />
       <Services openModal={setModalData} />
       <Industries openModal={setModalData} />
-      <Team />
       <AnalyticsReports openModal={setModalData} />
       <Events openModal={setModalData} />
       <Contact />

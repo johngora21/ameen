@@ -752,7 +752,7 @@ img { display: block; max-width: 100%; }
   font-size: 12px;
 }
 
-/* Horizontal strip — all viewports */
+/* Horizontal strip — mobile/tablet; centred row on desktop (3 cards) */
 .services-scroll {
   margin-left: -2.5rem;
   margin-right: -2.5rem;
@@ -782,9 +782,31 @@ img { display: block; max-width: 100%; }
   max-width: clamp(280px, 32vw, 360px);
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  text-align: center;
+}
+
+.services-scroll .service-icon {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (min-width: 1024px) {
+  .services-scroll {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
+
+  .services-grid {
+    width: 100%;
+    max-width: 100%;
+    justify-content: center;
+    padding-right: 0;
+  }
+
   .services-scroll .service-card {
     flex: 0 0 clamp(250px, 22vw, 300px);
     width: clamp(250px, 22vw, 300px);
@@ -792,6 +814,7 @@ img { display: block; max-width: 100%; }
     min-height: 400px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding: 2rem 1.45rem 1.75rem;
   }
 
@@ -802,7 +825,7 @@ img { display: block; max-width: 100%; }
 
   .services-scroll .service-card .service-link {
     margin-top: 1.25rem;
-    align-self: flex-start;
+    align-self: center;
   }
 }
 
